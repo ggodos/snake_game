@@ -1,0 +1,17 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+h3 {
+  text-align: center;
+}
+
+#canvas-container {
+  width: 100%;
+  text-align: center;
+}
+
+canvas {
+  display: inline;
+}
