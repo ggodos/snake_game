@@ -3,7 +3,7 @@ const ctx = canvas.getContext("2d");
 
 const HEIGHT = 600;
 const WIDTH = 800;
-const PHYS_SPEED = 200;
+const PHYS_SPEED = 100;
 const DIR = {
   r: { y: 0, x: 1 },
   l: { y: 0, x: -1 },
@@ -42,10 +42,18 @@ function stopGame() {
   gameStarted = false;
 }
 
+function resetGame() {
+  stopGame();
+  delete snake;
+  initGame();
+}
+
 function endGame() {
-  gameStarted = false;
-  console.log(endGameMsg);
+  stopGame();
+
   alert(endGameMsg);
+
+  resetGame();
 }
 
 function createNode(y, x, n) {
