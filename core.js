@@ -3,7 +3,7 @@ const ctx = canvas.getContext("2d");
 
 const HEIGHT = 600;
 const WIDTH = 800;
-const PHYS_SPEED = 250;
+const PHYS_SPEED = 200;
 const DIR = {
   r: { y: 0, x: 1 },
   l: { y: 0, x: -1 },
@@ -26,7 +26,7 @@ let CELLS_H;
 let CELLS_W;
 let snake;
 let move_dir = DIR.l;
-let availableCells = Array();
+let availableCells;
 
 let gameStarted = false;
 
@@ -85,17 +85,28 @@ function initMap() {
   gameMap = getStandartMap();
 }
 
-function initGame() {
-  initMap();
-  initSnake();
+function getElem(el) {
+  return { y: el.y, x: el.x };
+}
+
+function generateAvaliableCells() {
+  let avals = {};
   for (let y = 0; y < gameMap.length; y++) {
     for (let x = 0; x < gameMap[y].length; x++) {
       if (gameMap[y][x] == 0) {
-        availableCells.push({ y: y, x: x });
+        var el = getElem({ y: y, x: x });
+        avals[JSON.stringify(el)] = el;
       }
     }
   }
-  availableCells.sort();
+  availableCells = JSON.stringify(avals);
+}
+
+function initGame() {
+  initMap();
+  initSnake();
+  generateAvaliableCells();
+  generateFood(1);
 }
 
 function drawNode(node, color = nodeColor) {
@@ -104,7 +115,7 @@ function drawNode(node, color = nodeColor) {
 }
 
 function drawHead(color = snakeHeadColor) {
-  ctx.fillStyle = snakeHeadColor;
+  ctx.fillStyle = color;
   ctx.fillRect(snake.x * CELL_SIZE, snake.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 }
 
@@ -203,7 +214,20 @@ function snakeMove() {
   return { x: x, y: y };
 }
 
-function generateFood(n = 1) {}
+function generateFood(n = 1) {
+  // For now always work for n = 1
+  let avals = JSON.parse(availableCells);
+  cur = snake;
+  while (cur != null) {
+    delete avals[getElem(cur)];
+    cur = cur.next;
+  }
+
+  // Peek random coordinate
+  var keys = Object.keys(avals);
+  var c = avals[keys[(keys.length * Math.random()) << 0]];
+  gameMap[c.y][c.x] = 2;
+}
 
 function calcTurn() {
   let tail = snakeMove();
