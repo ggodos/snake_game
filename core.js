@@ -13,10 +13,12 @@ const DIR = {
 const EMPTY = 0;
 const WALL = 1;
 const FOOD = 2;
-const nodeColor = "#bd9cf9";
-const backgroundColor = "#282a36";
-const snakeHeadColor = "#ff5555";
-const snakeColor = "green";
+const NODE_COLOR = "#bd9cf9";
+const BACKGROUND_COLOR = "#282a36";
+const SNAKE_HEAD_COLOR = "#ff5555";
+const SNAKE_COLOR = "green";
+const WALL_COLOR = "#57c7ff";
+const FOOD_COLOR = "red";
 
 const loseMsg = "You lose.";
 const winMsg = "At the end all roads lead to death.";
@@ -138,22 +140,22 @@ function initGame() {
   generateFood(avals, 1);
 }
 
-function drawNode(node, color = nodeColor) {
+function drawNode(node, color = NODE_COLOR) {
   ctx.fillStyle = color;
   ctx.fillRect(node.x * cellSize, node.y * cellSize, cellSize, cellSize);
 }
 
-function drawHead(color = snakeHeadColor) {
+function drawHead(color = SNAKE_HEAD_COLOR) {
   ctx.fillStyle = color;
   ctx.fillRect(snake.x * cellSize, snake.y * cellSize, cellSize, cellSize);
 }
 
 function drawBackground() {
-  ctx.fillStyle = backgroundColor;
+  ctx.fillStyle = BACKGROUND_COLOR;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 }
 
-function drawSnake(color = snakeColor) {
+function drawSnake(color = SNAKE_COLOR) {
   let cur = snake.next;
   i = 0;
   while (cur != null) {
@@ -177,11 +179,11 @@ function drawCell(y, x) {
   ctx.fillStyle = "#282a36";
   switch (gameMap[y][x]) {
     case WALL:
-      ctx.fillStyle = "blue";
+      ctx.fillStyle = WALL_COLOR;
       break;
 
     case FOOD:
-      ctx.fillStyle = "red";
+      ctx.fillStyle = FOOD_COLOR;
     default:
       break;
   }
