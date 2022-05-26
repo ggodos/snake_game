@@ -102,6 +102,11 @@ function drawNode(node, color = nodeColor) {
   ctx.fillRect(node.x * CELL_SIZE, node.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 }
 
+function drawHead(color = snakeHeadColor) {
+  ctx.fillStyle = snakeHeadColor;
+  ctx.fillRect(snake.x * CELL_SIZE, snake.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+}
+
 function drawBackground() {
   ctx.fillStyle = backgroundColor;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
@@ -115,7 +120,7 @@ function drawSnake(color = snakeColor) {
     i++;
     cur = cur.next;
   }
-  drawNode(snake, snakeHeadColor);
+  drawHead();
 }
 
 function growSnake(x, y) {
@@ -205,9 +210,7 @@ function calcTurn() {
     endGame();
   }
   if (isSnakeEat()) {
-    console.log(tail);
     growSnake(tail.x, tail.y);
-    /* console.log(snake); */
     gameMap[snake.y][snake.x] = 0;
     generateFood(1);
   }
