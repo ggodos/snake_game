@@ -1,9 +1,9 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-const HEIGHT = 600;
 const WIDTH = 800;
-const PHYS_SPEED = 100;
+const HEIGHT = 720;
+const PHYS_SPEED = 500;
 const DIR = {
   r: { y: 0, x: 1 },
   l: { y: 0, x: -1 },
@@ -18,14 +18,15 @@ const backgroundColor = "#282a36";
 const snakeHeadColor = "#ff5555";
 const snakeColor = "green";
 
-const endGameMsg = "YOU LOSE";
+const loseMsg = "You lose.";
+const winMsg = "At the end all roads lead to death.";
 
 let gameMap;
 let cellSize;
 let cellsHeight;
 let cellsWidth;
 let snake;
-let moveDir = DIR.l;
+let moveDir;
 let canChangeDir = true;
 let availableCells;
 let wantStart = false;
@@ -56,7 +57,17 @@ function resetGame() {
 function endGame() {
   stopGame();
 
-  alert(endGameMsg);
+  alert(loseMsg);
+  console.log(loseMsg);
+
+  resetGame();
+}
+
+function winGame() {
+  stopGame();
+
+  alert(winMsg);
+  console.log(winMsg);
 
   resetGame();
 }
@@ -106,7 +117,7 @@ function getElem(el) {
   return { y: el.y, x: el.x };
 }
 
-function generateAvaliableCells() {
+function genStartAvaliableCells() {
   let avals = {};
   for (let y = 0; y < gameMap.length; y++) {
     for (let x = 0; x < gameMap[y].length; x++) {
@@ -122,8 +133,9 @@ function generateAvaliableCells() {
 function initGame() {
   initMap();
   initSnake();
-  generateAvaliableCells();
-  generateFood(1);
+  genStartAvaliableCells();
+  let avals = getAvaliableCells();
+  generateFood(avals, 1);
 }
 
 function drawNode(node, color = nodeColor) {
@@ -231,14 +243,22 @@ function snakeMove() {
   return { x: x, y: y };
 }
 
-function generateFood(n = 1) {
-  // For now always work for n = 1
+function getAvaliableCells() {
   let avals = JSON.parse(availableCells);
   cur = snake;
+  console.log(Object.keys(avals).length);
   while (cur != null) {
-    delete avals[getElem(cur)];
+    let el = getElem(cur);
+    delete avals[JSON.stringify(el)];
     cur = cur.next;
   }
+  return avals;
+}
+
+function generateFood(avals, n = 1) {
+  // For now always work for n = 1
+
+  /* console.log(avals); */
 
   // Peek random coordinate
   var keys = Object.keys(avals);
@@ -254,7 +274,13 @@ function calcTurn() {
   if (isSnakeEat()) {
     growSnake(tail.x, tail.y);
     gameMap[snake.y][snake.x] = 0;
-    generateFood(1);
+    let avals = getAvaliableCells();
+    console.log(avals, avals.length);
+    if (Object.keys(avals).length == 0) {
+      winGame();
+      return;
+    }
+    generateFood(avals);
   }
   canChangeDir = true;
 }
@@ -313,7 +339,7 @@ function physLoop() {
   }, PHYS_SPEED);
 }
 
-changeCellSize(20);
+changeCellSize(80);
 initGame();
 
 window.addEventListener("keydown", controller.keyListener);
