@@ -262,21 +262,33 @@ const controller = {
       case 37: // left key
         if (move_dir != DIR.r) {
           move_dir = DIR.l;
+          if (!gameStarted) {
+            startGame();
+          }
         }
         break;
       case 38: // up key
         if (move_dir != DIR.d) {
           move_dir = DIR.u;
+          if (!gameStarted) {
+            startGame();
+          }
         }
         break;
       case 39: // right key
         if (move_dir != DIR.l) {
           move_dir = DIR.r;
+          if (!gameStarted) {
+            startGame();
+          }
         }
         break;
       case 40: // down key
         if (move_dir != DIR.u) {
           move_dir = DIR.d;
+          if (!gameStarted) {
+            startGame();
+          }
         }
         break;
     }
