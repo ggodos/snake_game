@@ -5,10 +5,10 @@ const HEIGHT = 600;
 const WIDTH = 800;
 const PHYS_SPEED = 100;
 const DIR = {
-  r: { y: 0, x: 1, opposite: { y: 0, x: -1 } },
-  l: { y: 0, x: -1, opposite: { y: 0, x: 1 } },
-  u: { y: -1, x: 0, opposite: { y: 1, x: 0 } },
-  d: { y: 1, x: 0, opposite: { y: -1, x: 0 } },
+  r: { y: 0, x: 1 },
+  l: { y: 0, x: -1 },
+  u: { y: -1, x: 0 },
+  d: { y: 1, x: 0 },
 };
 const EMPTY = 0;
 const WALL = 1;
@@ -26,7 +26,9 @@ let cellsHeight;
 let cellsWidth;
 let snake;
 let moveDir = DIR.l;
+let canChangeDir = true;
 let availableCells;
+let wantStart = false;
 
 let gameStarted = false;
 
@@ -34,6 +36,9 @@ ctx.canvas.height = HEIGHT;
 ctx.canvas.width = WIDTH;
 
 function startGame() {
+  if (gameStarted) {
+    return;
+  }
   gameStarted = true;
   physLoop();
 }
@@ -251,37 +256,47 @@ function calcTurn() {
     gameMap[snake.y][snake.x] = 0;
     generateFood(1);
   }
+  canChangeDir = true;
 }
 
 const controller = {
   keyListener: function (e) {
     let nextDir = moveDir;
     switch (e.keyCode) {
-      case 13: // enter
-        if (!gameStarted) {
-          startGame();
-        } else {
-          stopGame();
-        }
       case 37: // left arrow
-        nextDir = DIR.l;
+        if (moveDir != DIR.r) {
+          nextDir = DIR.l;
+          wantStart = true;
+        }
         break;
       case 38: // up arrow
-        nextDir = DIR.u;
+        if (moveDir != DIR.d) {
+          nextDir = DIR.u;
+          wantStart = true;
+        }
+        /* wantChangeDir = nextDir != DIR.d; */
         break;
       case 39: // right arrow
-        nextDir = DIR.r;
+        if (moveDir != DIR.l) {
+          nextDir = DIR.r;
+          wantStart = true;
+        }
         break;
       case 40: // down arrow
-        nextDir = DIR.d;
+        if (moveDir != DIR.u) {
+          nextDir = DIR.d;
+          wantStart = true;
+        }
         break;
     }
 
-    if (moveDir != moveDir.opposite) {
+    if (canChangeDir) {
+      canChangeDir = false;
       moveDir = nextDir;
-      if (!gameStarted) {
-        startGame();
-      }
+    }
+    if (wantStart && !gameStarted) {
+      startGame();
+      wantStart = false;
     }
   },
 };
