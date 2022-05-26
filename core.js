@@ -21,11 +21,11 @@ const snakeColor = "green";
 const endGameMsg = "YOU LOSE";
 
 let gameMap;
-let CELL_SIZE;
-let CELLS_H;
-let CELLS_W;
+let cellSize;
+let cellsHeight;
+let cellsWidth;
 let snake;
-let move_dir = DIR.l;
+let moveDir = DIR.l;
 let availableCells;
 
 let gameStarted = false;
@@ -68,25 +68,29 @@ function createNode(y, x, n) {
 
 function getStandartMap() {
   // Create walled map
-  let stdMap = Array(CELLS_H);
-  stdMap[0] = Array(CELLS_W).fill(1);
-  for (let i = 1; i < CELLS_H; i++) {
-    stdMap[i] = Array(CELLS_W).fill(0);
+  let stdMap = Array(cellsHeight);
+  stdMap[0] = Array(cellsWidth).fill(1);
+  for (let i = 1; i < cellsHeight; i++) {
+    stdMap[i] = Array(cellsWidth).fill(0);
     stdMap[i][0] = 1;
-    stdMap[i][CELLS_W - 1] = 1;
+    stdMap[i][cellsWidth - 1] = 1;
   }
-  stdMap[CELLS_H - 1] = Array(CELLS_W).fill(1);
+  stdMap[cellsHeight - 1] = Array(cellsWidth).fill(1);
   return stdMap;
 }
 
 function changeCellSize(size) {
-  CELL_SIZE = size;
-  CELLS_H = Math.floor(HEIGHT / CELL_SIZE);
-  CELLS_W = Math.floor(WIDTH / CELL_SIZE);
+  cellSize = size;
+  cellsHeight = Math.floor(HEIGHT / cellSize);
+  cellsWidth = Math.floor(WIDTH / cellSize);
 }
 
 function initSnake() {
-  snake = createNode(Math.floor(CELLS_H / 2), Math.floor(CELLS_W / 2), 0);
+  snake = createNode(
+    Math.floor(cellsHeight / 2),
+    Math.floor(cellsWidth / 2),
+    0
+  );
 }
 
 function initMap() {
@@ -119,12 +123,12 @@ function initGame() {
 
 function drawNode(node, color = nodeColor) {
   ctx.fillStyle = color;
-  ctx.fillRect(node.x * CELL_SIZE, node.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+  ctx.fillRect(node.x * cellSize, node.y * cellSize, cellSize, cellSize);
 }
 
 function drawHead(color = snakeHeadColor) {
   ctx.fillStyle = color;
-  ctx.fillRect(snake.x * CELL_SIZE, snake.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+  ctx.fillRect(snake.x * cellSize, snake.y * cellSize, cellSize, cellSize);
 }
 
 function drawBackground() {
@@ -164,7 +168,7 @@ function drawCell(y, x) {
     default:
       break;
   }
-  ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+  ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
 }
 
 function drawMap() {
@@ -205,8 +209,8 @@ function snakeMove() {
   let x = snake.x,
     y = snake.y;
   cur = snake.next;
-  snake.x += move_dir.x;
-  snake.y += move_dir.y;
+  snake.x += moveDir.x;
+  snake.y += moveDir.y;
 
   let tx = x,
     ty = y;
@@ -260,32 +264,32 @@ const controller = {
         }
         break;
       case 37: // left key
-        if (move_dir != DIR.r) {
-          move_dir = DIR.l;
+        if (moveDir != DIR.r) {
+          moveDir = DIR.l;
           if (!gameStarted) {
             startGame();
           }
         }
         break;
       case 38: // up key
-        if (move_dir != DIR.d) {
-          move_dir = DIR.u;
+        if (moveDir != DIR.d) {
+          moveDir = DIR.u;
           if (!gameStarted) {
             startGame();
           }
         }
         break;
       case 39: // right key
-        if (move_dir != DIR.l) {
-          move_dir = DIR.r;
+        if (moveDir != DIR.l) {
+          moveDir = DIR.r;
           if (!gameStarted) {
             startGame();
           }
         }
         break;
       case 40: // down key
-        if (move_dir != DIR.u) {
-          move_dir = DIR.d;
+        if (moveDir != DIR.u) {
+          moveDir = DIR.d;
           if (!gameStarted) {
             startGame();
           }
