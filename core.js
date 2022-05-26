@@ -5,10 +5,10 @@ const HEIGHT = 600;
 const WIDTH = 800;
 const PHYS_SPEED = 100;
 const DIR = {
-  r: { y: 0, x: 1 },
-  l: { y: 0, x: -1 },
-  u: { y: -1, x: 0 },
-  d: { y: 1, x: 0 },
+  r: { y: 0, x: 1, opposite: { y: 0, x: -1 } },
+  l: { y: 0, x: -1, opposite: { y: 0, x: 1 } },
+  u: { y: -1, x: 0, opposite: { y: 1, x: 0 } },
+  d: { y: 1, x: 0, opposite: { y: -1, x: 0 } },
 };
 const EMPTY = 0;
 const WALL = 1;
@@ -255,6 +255,7 @@ function calcTurn() {
 
 const controller = {
   keyListener: function (e) {
+    let nextDir = moveDir;
     switch (e.keyCode) {
       case 13: // enter
         if (!gameStarted) {
@@ -262,39 +263,25 @@ const controller = {
         } else {
           stopGame();
         }
+      case 37: // left arrow
+        nextDir = DIR.l;
         break;
-      case 37: // left key
-        if (moveDir != DIR.r) {
-          moveDir = DIR.l;
-          if (!gameStarted) {
-            startGame();
-          }
-        }
+      case 38: // up arrow
+        nextDir = DIR.u;
         break;
-      case 38: // up key
-        if (moveDir != DIR.d) {
-          moveDir = DIR.u;
-          if (!gameStarted) {
-            startGame();
-          }
-        }
+      case 39: // right arrow
+        nextDir = DIR.r;
         break;
-      case 39: // right key
-        if (moveDir != DIR.l) {
-          moveDir = DIR.r;
-          if (!gameStarted) {
-            startGame();
-          }
-        }
+      case 40: // down arrow
+        nextDir = DIR.d;
         break;
-      case 40: // down key
-        if (moveDir != DIR.u) {
-          moveDir = DIR.d;
-          if (!gameStarted) {
-            startGame();
-          }
-        }
-        break;
+    }
+
+    if (moveDir != moveDir.opposite) {
+      moveDir = nextDir;
+      if (!gameStarted) {
+        startGame();
+      }
     }
   },
 };
