@@ -18,6 +18,8 @@ const backgroundColor = "#282a36";
 const snakeHeadColor = "#ff5555";
 const snakeColor = "green";
 
+const endGameMsg = "YOU LOSE";
+
 let gameMap;
 let CELL_SIZE;
 let CELLS_H;
@@ -42,7 +44,8 @@ function stopGame() {
 
 function endGame() {
   gameStarted = false;
-  console.log("YOU LOSE");
+  console.log(endGameMsg);
+  alert(endGameMsg);
 }
 
 function createNode(y, x, n) {
@@ -55,10 +58,23 @@ function createNode(y, x, n) {
   };
 }
 
+function getStandartMap() {
+  // Create walled map
+  let stdMap = Array(CELLS_H);
+  stdMap[0] = Array(CELLS_W).fill(1);
+  for (let i = 1; i < CELLS_H; i++) {
+    stdMap[i] = Array(CELLS_W).fill(0);
+    stdMap[i][0] = 1;
+    stdMap[i][CELLS_W - 1] = 1;
+  }
+  stdMap[CELLS_H - 1] = Array(CELLS_W).fill(1);
+  return stdMap;
+}
+
 function changeCellSize(size) {
   CELL_SIZE = size;
-  CELLS_H = Math.floor(HEIGHT / CELL_SIZE) + 2;
-  CELLS_W = Math.floor(WIDTH / CELL_SIZE) + 2;
+  CELLS_H = Math.floor(HEIGHT / CELL_SIZE);
+  CELLS_W = Math.floor(WIDTH / CELL_SIZE);
 }
 
 function initSnake() {
@@ -66,25 +82,10 @@ function initSnake() {
 }
 
 function initMap() {
-  gameMap[16][19] = 2;
-  gameMap[16][18] = 2;
-  gameMap[16][17] = 2;
-  gameMap[16][16] = 2;
-  gameMap[16][15] = 2;
-  gameMap[16][14] = 2;
-  gameMap[16][13] = 2;
-  gameMap[16][12] = 2;
-  gameMap[16][11] = 2;
-  gameMap[16][10] = 2;
-  gameMap[16][9] = 2;
-  gameMap[16][8] = 2;
+  gameMap = getStandartMap();
 }
 
 function initGame() {
-  gameMap = Array(CELLS_H);
-  for (let i = 0; i < CELLS_H; i++) {
-    gameMap[i] = Array(CELLS_W).fill(0);
-  }
   initMap();
   initSnake();
   for (let y = 0; y < gameMap.length; y++) {
